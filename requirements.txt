@@ -1,0 +1,8 @@
+llm-guard==0.3.9
+llm-guard[onnxruntime]==0.3.9
+pandas==2.2.0
+flask==2.2.2
+flask_session==0.6.0
+Werkzeug==2.2.2
+streamlit==1.31.0
+streamlit-tags==1.2.8
