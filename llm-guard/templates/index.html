@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LLM Guard</title>
+    <style>
+        body {
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            margin: auto;
+            width: 80%;
+        }
+        textarea, select {
+            width: 100%;
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .sanitized-text, .model-selection {
+            text-align: left;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>LLM Guard Input Scanner</h2>
+        <form action="/" method="post">
+            <textarea name="user_prompt" rows="15" placeholder="Enter your prompt here..."></textarea><br>
+            <input type="submit" value="Scan Prompt">
+        </form>
+        <div class="model-selection">
+            <form action="/model_action" method="post"> 
+                <label for="llm-model">Choose a LLM Model:</label>
+                <select id="llm-model" name="llm_model">
+                    <option value="gpt-3">GPT-3</option>
+                    <option value="gpt-4">GPT-4</option>
+                    <option value="codex">Codex</option>
+                    <option value="davinci">Davinci</option>
+
+                </select><br>
+                
+            </form>
+        </div>
+        {% if mappings %}
+            <div>
+                <h3>Mapping of Original to Redacted:</h3>
+                <table>
+                    <tr>
+                        <th>Original Text</th>
+                        <th>Redacted Text</th>
+                    </tr>
+                    {% for original, redacted in mappings.items() %}  >
+                        <tr>
+                            <td>{{ original }}</td>
+                            <td>{{ redacted }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        {% endif %}
+
+        {% if sanitized_prompt %}
+            <div class="sanitized-text">
+                <h3>Sanitized Prompt:</h3>
+                <pre>{{ sanitized_prompt }}</pre>
+                <p>Sanitization Complete!</p>
+            </div>
+        {% endif %}
+        {% if scan_results %}
+            <div>
+                <h3>Scan Results:</h3>
+                <table>
+                    <tr>
+                        <th>Scanner</th>
+                        <th>Valid</th>
+                        <th>Risk Score</th>
+                        <th>Duration (seconds)</th>
+                    </tr>
+                    {% for result in scan_results %}
+                        <tr>
+                            <td>{{ result['scanner'] }}</td>
+                            <td>{{ result['is_valid'] }}</td>
+                            <td>{{ result['risk_score'] }}</td>
+                            <td>{{ result['took_sec'] }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        {% endif %}
+        <div class="model-selection">
+            <form action="/" method="post"> 
+                <textarea name="redacted_prompt" rows="10" placeholder="Enter your redacted prompt here..."></textarea><br>
+                <input type="submit" value="Replace Redacted Text">
+            </form>
+        </div>
+
+        {% if replaced_prompt %}
+            <div class="sanitized-text">
+                <h3>Replaced Prompt:</h3>
+                <pre>{{ replaced_prompt }}</pre>
+                <p>Replacement Complete!</p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
