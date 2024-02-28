@@ -6,3 +6,4 @@ flask_session==0.6.0
 Werkzeug==2.2.2
 streamlit==1.31.0
 streamlit-tags==1.2.8
+gunicorn==19.7.1
